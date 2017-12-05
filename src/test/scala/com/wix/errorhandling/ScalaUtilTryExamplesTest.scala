@@ -18,6 +18,11 @@ class ScalaUtilTryExamplesTest extends SpecificationWithJUnit with JMock {
     }
   }
 
+  "Tries can be used replace one failure with another" in new ctx {
+    givenMissingFile(file)
+    scalaUtilTryExamples.saveFileContentsToDatabaseWithRecovery(file) must beAFailedTry.withThrowable[MissingFileException]
+  }
+
 
 
   trait ctx extends Scope {
