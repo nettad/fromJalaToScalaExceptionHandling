@@ -8,47 +8,47 @@ class FileReaderTest extends SpecificationWithJUnit with JMock {
 
   "PlainOldJalaFileReader" should {
     "read file successfully" in new ctx {
-      plainOldJalaFileReader.read("file.txt") must be_===(fileContents)
+      plainOldJalaFileReader.read(file) must be_===(fileContent)
     }
 
     "log unsuccessful attempts to read file" in new ctx {
       expectingToLogUnsuccessfulFileRead()
-      plainOldJalaFileReader.read("missing-file.txt") must throwA[Exception]
+      plainOldJalaFileReader.read(missingFile) must throwAn[Exception]
     }
   }
 
   "ScalaUtilTryFileReader" should {
     "read file successfully" in new ctx {
-      scalaUtilTryFileReader.read("file.txt") must be_===(fileContents)
+      scalaUtilTryFileReader.read(file) must be_===(fileContent)
     }
 
     "log unsuccessful attempts to read file" in new ctx {
       expectingToLogUnsuccessfulFileRead()
-      scalaUtilTryFileReader.read("missing-file.txt") must throwA[Exception]
+      scalaUtilTryFileReader.read(missingFile) must throwAn[Exception]
     }
   }
 
   "ScalaUtilControlExceptionFileReader" should {
     "read file successfully" in new ctx {
-      scalaUtilControlExceptionFileReader.read("file.txt") must be_===(fileContents)
+      scalaUtilControlExceptionFileReader.read(file) must be_===(fileContent)
     }
 
     "log unsuccessful attempts to read file" in new ctx {
       expectingToLogUnsuccessfulFileRead()
-      scalaUtilControlExceptionFileReader.read("missing-file.txt") must throwA[Exception]
+      scalaUtilControlExceptionFileReader.read(missingFile) must throwAn[Exception]
     }
   }
 
   trait ctx extends Scope {
     private val logger = mock[Logger]
 
-    val fileContents = "This file contains some random text. It's really not important what's written here."
-
     val plainOldJalaFileReader = new PlainOldJalaFileReader(logger)
-
     val scalaUtilTryFileReader = new ScalaUtilTryFileReader(logger)
-
     val scalaUtilControlExceptionFileReader = new ScalaUtilControlExceptionFileReader(logger)
+
+    val file = "file.txt"
+    val missingFile = "missing-file.txt"
+    val fileContent = "This file contains some random text. It's really not important what's written here."
 
     def expectingToLogUnsuccessfulFileRead() =
       checking {
