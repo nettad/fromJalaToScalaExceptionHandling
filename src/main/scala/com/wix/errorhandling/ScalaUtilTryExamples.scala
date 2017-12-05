@@ -1,6 +1,6 @@
 package com.wix.errorhandling
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Try}
 
 class ScalaUtilTryExamples(fileReader: FileReader, userIdExtractor: UserIdExtractor, databaseWriter: DatabaseWriter) {
 
