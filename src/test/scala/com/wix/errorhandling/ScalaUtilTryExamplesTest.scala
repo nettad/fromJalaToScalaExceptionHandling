@@ -6,23 +6,44 @@ import org.specs2.specification.Scope
 
 class ScalaUtilTryExamplesTest extends SpecificationWithJUnit with JMock {
 
-  "Tries can be used in for-loop comprehension" in new ctx {
-    scalaUtilTryExamples.saveFileContentsToDatabase(file)
+  "Tries can be used in for-loop comprehension" >> {
+    "successfully" in new ctx {
+      expectingToSaveFileContentsToDatabase(input = file)
+      scalaUtilTryExamples.saveFileContentsToDatabase(file)
+    }
+
+    "to handle failures" in new ctx {
+      givenMissingFile(file)
+      scalaUtilTryExamples.saveFileContentsToDatabase(file) must throwA[FileNotFoundException]
+    }
   }
 
+
+
   trait ctx extends Scope {
-    val databaseWriter = mock[DatabaseWriter]
-    val fileReader = mock[FileReader]
+    private val databaseWriter = mock[DatabaseWriter]
+    private val fileReader = mock[FileReader]
+    private val userIdExtractor = mock[UserIdExtractor]
     val file = "file.txt"
-    val fileContents = "blah blah blah"
 
-    val scalaUtilTryExamples = new ScalaUtilTryExamples(fileReader, databaseWriter)
+    val scalaUtilTryExamples = new ScalaUtilTryExamples(fileReader, userIdExtractor, databaseWriter)
 
-    private def expectingToSaveFileContentsToDatabase(file: String) =
+    def expectingToSaveFileContentsToDatabase(input: String) = {
+      val userId = 1
+      val fileContents = s"userId=$userId"
+
       checking {
-        allowing(fileReader).read(file) willReturn fileContents
-        oneOf(databaseWriter).write(id = 1, data = fileContents)
+        allowing(fileReader).read(input) willReturn fileContents
+        allowing(userIdExtractor).extractFrom(fileContents) willReturn userId
+        oneOf(databaseWriter).write(userId, data = fileContents)
+      }
+    }
+
+    def givenMissingFile(file: String) =
+      checking {
+        allowing(fileReader).read(file) willThrow FileNotFoundException(file)
       }
   }
 
 }
+                                                         

@@ -74,3 +74,5 @@ class ScalaUtilControlExceptionFileReader(logger: Logger) extends FileReader {
   }
 
 }
+
+case class FileNotFoundException(file: String) extends RuntimeException

@@ -1,7 +1,13 @@
 package com.wix.errorhandling
 
-class ScalaUtilTryExamples(fileReader: FileReader, databaseWriter: DatabaseWriter) {
+import scala.util.Try
 
-  def saveFileContentsToDatabase(fileName: String): Unit = ???
+class ScalaUtilTryExamples(fileReader: FileReader, userIdExtractor: UserIdExtractor, databaseWriter: DatabaseWriter) {
+
+  def saveFileContentsToDatabase(fileName: String): Unit =
+    (for {
+      fileContents <- Try(fileReader.read(file = fileName))
+      userId <- Try(userIdExtractor.extractFrom(fileContents))
+    } yield databaseWriter.write(id = userId, data = fileContents)).get
 
 }
