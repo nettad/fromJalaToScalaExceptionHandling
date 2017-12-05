@@ -1,10 +1,11 @@
-package com.wix.errorhandling
+package com.wix.errorhandling.scala_util_try
 
+import com.wix.errorhandling.{DatabaseWriter, FileNotFoundException, FileReader, UserIdExtractor}
 import com.wixpress.common.specs2.JMock
 import org.specs2.mutable.SpecWithJUnit
 import org.specs2.specification.Scope
 
-class ScalaUtilTryExamplesTest extends SpecWithJUnit with JMock {
+class ScalaUtilTryFileToDbWriterTest extends SpecWithJUnit with JMock {
 
   "Tries can be used in for-loop comprehension" >> {
     "successfully" in new ctx {
@@ -46,7 +47,7 @@ class ScalaUtilTryExamplesTest extends SpecWithJUnit with JMock {
     val userId = 1
     val fileContents = s"userId=$userId"
 
-    val scalaUtilTryExamples = new ScalaUtilTryExamples(fileReader, userIdExtractor, databaseWriter)
+    val scalaUtilTryExamples = new ScalaUtilTryFileToDbWriter(fileReader, userIdExtractor, databaseWriter)
 
     def expectingToSaveFileContentsToDatabase(input: String) = {
 
