@@ -12,12 +12,19 @@ class ScalaUtilTryMathCalculator extends MatchCalculator {
     Try(x / by) map(_.toString) getOrElse "ERROR"
 
 
+  //Failures can be replaced by other Failures using recover
+  //Alternatively the Failure can be ignored altogether and a Successful result returned instead
+  override def tryToDivideStrings(x: String, by: String): Try[Int] =
+    Try(x.toInt/by.toInt) recover {
+      case _: NumberFormatException if x == "skip" => -1
+      case e: NumberFormatException => throw MathError(e)
+    }
+
   //Failures can be replaced by other Failures using recoverWith
   //Alternatively the Failure can be ignored altogether and a Successful result returned instead
-  override def divideStrings(x: String, by: String): Int = {
-    Try(x.toInt/by.toInt) recoverWith {
-      case _: NumberFormatException if x == "skip" => Success(-1)
-      case e: NumberFormatException => Failure(MathError(e))
-    } get
-  }
+  override def divideStrings(x: String, by: String): Int =
+  Try(x.toInt/by.toInt) recoverWith {
+    case _: NumberFormatException if x == "skip" => Success(-1)
+    case e: NumberFormatException => Failure(MathError(e))
+  } get
 }
