@@ -1,10 +1,10 @@
 package com.wix.errorhandling
 
 import com.wixpress.common.specs2.JMock
-import org.specs2.mutable.SpecificationWithJUnit
+import org.specs2.mutable.SpecWithJUnit
 import org.specs2.specification.Scope
 
-class ScalaUtilTryExamplesTest extends SpecificationWithJUnit with JMock {
+class ScalaUtilTryExamplesTest extends SpecWithJUnit with JMock {
 
   "Tries can be used in for-loop comprehension" >> {
     "successfully" in new ctx {
@@ -24,18 +24,31 @@ class ScalaUtilTryExamplesTest extends SpecificationWithJUnit with JMock {
   }
 
 
+/*  "Tries can be transformed successfully" in new ctx {
+    given(fileContents, forFile = file)
+    scalaUtilTryExamples.mapUserToFile(userId, file) must be_===(Map(userId -> fileContents))
+  }
+
+  "Tries can be transformed in the event of a failure" in new ctx {
+    givenMissingFile(file)
+    scalaUtilTryExamples.mapUserToFile(userId, file) must beEmpty
+  }*/
+
+
+
+
 
   trait ctx extends Scope {
     private val databaseWriter = mock[DatabaseWriter]
     private val fileReader = mock[FileReader]
     private val userIdExtractor = mock[UserIdExtractor]
     val file = "file.txt"
+    val userId = 1
+    val fileContents = s"userId=$userId"
 
     val scalaUtilTryExamples = new ScalaUtilTryExamples(fileReader, userIdExtractor, databaseWriter)
 
     def expectingToSaveFileContentsToDatabase(input: String) = {
-      val userId = 1
-      val fileContents = s"userId=$userId"
 
       checking {
         allowing(fileReader).read(input) willReturn fileContents
@@ -47,6 +60,11 @@ class ScalaUtilTryExamplesTest extends SpecificationWithJUnit with JMock {
     def givenMissingFile(file: String) =
       checking {
         allowing(fileReader).read(file) willThrow FileNotFoundException(file)
+      }
+
+    def given(fileContents: String, forFile: String) =
+      checking {
+        allowing(fileReader).read(forFile) willReturn fileContents
       }
   }
 

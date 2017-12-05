@@ -1,10 +1,10 @@
 package com.wix.errorhandling
 
 import com.wixpress.common.specs2.JMock
-import org.specs2.mutable.SpecificationWithJUnit
+import org.specs2.mutable.SpecWithJUnit
 import org.specs2.specification.Scope
 
-class FileReaderTest extends SpecificationWithJUnit with JMock {
+class FileReaderTest extends SpecWithJUnit with JMock {
 
   "PlainOldJalaFileReader" should {
     "read file successfully" in new ctx {
