@@ -12,6 +12,7 @@ class ScalaUtilTryMathCalculatorTest extends SpecWithJUnit {
     }
 
     "return ERROR when division fails" in new ctx {
+      //Tries can be transformed
       scalaUtilTryMathCalculator.divide(x = 10, by = 0) must be_===("ERROR")
     }
 
@@ -20,11 +21,13 @@ class ScalaUtilTryMathCalculatorTest extends SpecWithJUnit {
     }
 
     "dividing strings should result in a math error when one of the strings is not an int" in new ctx {
+      //Try.recoverWith can be used replace one util.Failure with another
       scalaUtilTryMathCalculator.divideStrings(x = "10", by = "foo") must throwA[MathError]
     }
 
-    "dividing strings should result in a math error when one of the strings is null" in new ctx {
-      scalaUtilTryMathCalculator.divideStrings(x = "10", by = "foo") must throwA[MathError]
+    "dividing strings should return -1 when x is equal to 'skip'" in new ctx {
+      //Try.recoverWith can be used to replace a util.Failure with a util.Success
+      scalaUtilTryMathCalculator.divideStrings(x = "skip", by = "2") must be_===(-1)
     }
 
     

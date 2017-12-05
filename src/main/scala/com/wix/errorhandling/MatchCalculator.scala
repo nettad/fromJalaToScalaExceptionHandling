@@ -7,4 +7,4 @@ trait MatchCalculator {
   def divideStrings(x: String, by: String): Int
 }
 
-case class MathError() extends RuntimeException
+case class MathError(e: Exception) extends RuntimeException
