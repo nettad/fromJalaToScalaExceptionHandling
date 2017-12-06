@@ -6,7 +6,7 @@ import org.specs2.specification.Scope
 
 class ScalaUtilTryMathCalculatorTest extends SpecWithJUnit {
 
-  "MatchCalculator" should {
+  "ScalaUtilTryMathCalculator" should {
     "divide 2 numbers and return the response as a String" in new ctx {
       scalaUtilTryMathCalculator.divide(x = 10, by = 2) must be_===("5")
     }
