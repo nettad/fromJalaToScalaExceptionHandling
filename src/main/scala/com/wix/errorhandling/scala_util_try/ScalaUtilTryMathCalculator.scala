@@ -9,7 +9,7 @@ class ScalaUtilTryMathCalculator extends MathCalculator {
 
   //Try can be transformed using map
   //In this example we can see that a scala.util.Failure can be transformed to another value using getOrElse
-  def divide(x: Int, by: Int): String =
+  override def divide(x: Int, by: Int): String =
     Try(x / by) map(_.toString) getOrElse "ERROR"
 
 
@@ -32,7 +32,7 @@ class ScalaUtilTryMathCalculator extends MathCalculator {
 
   //Failures can be replaced by other failures altogether
   //this can be achieved via getOrElse(throw SomeMathBusinessException()) as well
-  def businessDivide(x: Int, by: Int): Int =
+  override def businessDivide(x: Int, by: Int): Int =
     Try(x / by) orElse Failure(SomeMathBusinessException()) get
 
 }

@@ -9,6 +9,8 @@ trait MathCalculator {
   def tryToDivideStrings(x: String, by: String): Try[Int]
 
   def divideStrings(x: String, by: String): Int
+
+  def businessDivide(x: Int, by: Int): Int
 }
 
 case class MathError(e: Exception) extends RuntimeException
