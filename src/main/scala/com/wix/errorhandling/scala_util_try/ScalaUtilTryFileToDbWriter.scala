@@ -13,9 +13,4 @@ class ScalaUtilTryFileToDbWriter(fileReader: FileReader, userIdExtractor: UserId
       userId <- Try(userIdExtractor.extractFrom(fileContents))
     } yield databaseWriter.write(id = userId, data = fileContents)).get
 
-  def saveFileContentsToDatabaseWithRecovery(fileName: String): Try[Unit] = {
-    Try[Unit](fileReader.read(file = fileName))
-      .recoverWith { case e: Exception => Failure(MissingFileException(e.toString)) }
-  }
-
 }

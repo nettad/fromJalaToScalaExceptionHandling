@@ -1,42 +1,24 @@
 package com.wix.errorhandling.scala_util_try
 
-import com.wix.errorhandling.{DatabaseWriter, FileNotFoundException, FileReader, UserIdExtractor}
+import com.wix.errorhandling._
 import com.wixpress.common.specs2.JMock
 import org.specs2.mutable.SpecWithJUnit
 import org.specs2.specification.Scope
 
 class ScalaUtilTryFileToDbWriterTest extends SpecWithJUnit with JMock {
 
-  "Tries can be used in for-loop comprehension" >> {
-    "successfully" in new ctx {
+  //for-loop comprehension example
+  "ScalaUtilTryFileToDbWriter" should {
+    "save files contents to db" in new ctx {
       expectingToSaveFileContentsToDatabase(input = file)
       scalaUtilTryExamples.saveFileContentsToDatabase(file)
     }
 
-    "to handle failures" in new ctx {
+    "throw FileNotFoundException when file is missing" in new ctx {
       givenMissingFile(file)
       scalaUtilTryExamples.saveFileContentsToDatabase(file) must throwA[FileNotFoundException]
     }
   }
-
-  "Tries can be used replace one failure with another" in new ctx {
-    givenMissingFile(file)
-    scalaUtilTryExamples.saveFileContentsToDatabaseWithRecovery(file) must beAFailedTry.withThrowable[MissingFileException]
-  }
-
-
-/*  "Tries can be transformed successfully" in new ctx {
-    given(fileContents, forFile = file)
-    scalaUtilTryExamples.mapUserToFile(userId, file) must be_===(Map(userId -> fileContents))
-  }
-
-  "Tries can be transformed in the event of a failure" in new ctx {
-    givenMissingFile(file)
-    scalaUtilTryExamples.mapUserToFile(userId, file) must beEmpty
-  }*/
-
-
-
 
 
   trait ctx extends Scope {
