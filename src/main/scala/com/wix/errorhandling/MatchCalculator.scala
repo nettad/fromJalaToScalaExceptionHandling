@@ -12,3 +12,5 @@ trait MatchCalculator {
 }
 
 case class MathError(e: Exception) extends RuntimeException
+
+case class SomeMathBusinessException() extends RuntimeException

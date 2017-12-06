@@ -1,6 +1,6 @@
 package com.wix.errorhandling.scala_util_try
 
-import com.wix.errorhandling.MathError
+import com.wix.errorhandling.{MathError, SomeMathBusinessException}
 import org.specs2.mutable.SpecWithJUnit
 import org.specs2.specification.Scope
 
@@ -44,6 +44,13 @@ class ScalaUtilTryMathCalculatorTest extends SpecWithJUnit {
       scalaUtilTryMathCalculator.divideStrings(x = "skip", by = "2") must be_===(-1)
     }
 
+    "return result of successful business divide" in new ctx {
+      scalaUtilTryMathCalculator.businessDivide(x = 10, by = 2) must be_===(5)
+    }
+
+    "replace any exception with SomeMathBusinessException when businessDivide fails" in new ctx {
+      scalaUtilTryMathCalculator.businessDivide(x = 10, by = 0) must throwA[SomeMathBusinessException]
+    }
     
 
   }
