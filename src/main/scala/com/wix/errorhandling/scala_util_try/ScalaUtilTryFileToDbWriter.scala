@@ -2,7 +2,7 @@ package com.wix.errorhandling.scala_util_try
 
 import com.wix.errorhandling._
 
-import scala.util.{Failure, Try}
+import scala.util.Try
 
 
 class ScalaUtilTryFileToDbWriter(fileReader: FileReader, userIdExtractor: UserIdExtractor, databaseWriter: DatabaseWriter) extends FileToDbWriter {
