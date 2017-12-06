@@ -1,10 +1,10 @@
 package com.wix.errorhandling.scala_util_try
 
-import com.wix.errorhandling.{MatchCalculator, MathError, SomeMathBusinessException}
+import com.wix.errorhandling.{MathCalculator, MathError, SomeMathBusinessException}
 
 import scala.util.{Failure, Success, Try}
 
-class ScalaUtilTryMathCalculator extends MatchCalculator {
+class ScalaUtilTryMathCalculator extends MathCalculator {
 
 
   //Try can be transformed using map

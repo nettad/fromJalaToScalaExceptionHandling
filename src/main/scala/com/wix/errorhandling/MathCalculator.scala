@@ -2,7 +2,7 @@ package com.wix.errorhandling
 
 import scala.util.Try
 
-trait MatchCalculator {
+trait MathCalculator {
 
   def divide(x: Int, by: Int): String
 
