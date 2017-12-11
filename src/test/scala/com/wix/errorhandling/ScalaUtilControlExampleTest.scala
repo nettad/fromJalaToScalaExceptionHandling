@@ -64,11 +64,11 @@ class ScalaUtilControlExampleTest extends SpecWithJUnit {
 
   "Example of Exception.nonFatalCatch recovering with some other Exception" in {
     //catches all non fatal exceptions
-    val divideOrThrowBusinessException = nonFatalCatch withApply { e: Throwable => throw SomeMathBusinessException(e) }
+    val divideOrThrowBusinessException = nonFatalCatch withApply { e: Throwable => throw SomeBusinessException(e) }
 
     divideOrThrowBusinessException(10 / 2) must be_===(5)
 
-    divideOrThrowBusinessException(10/0) must throwA[SomeMathBusinessException]
+    divideOrThrowBusinessException(10/0) must throwA[SomeBusinessException]
   }
 
   "Example of Exception.nonFatalCatch in a chaining pattern" in {

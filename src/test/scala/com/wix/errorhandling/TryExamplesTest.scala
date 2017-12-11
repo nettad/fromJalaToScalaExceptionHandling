@@ -48,7 +48,7 @@ class TryExamplesTest extends SpecWithJUnit {
     }
 
     "option 2 recoverWith to change Failure to another Failure" in {
-      Try(1 / 0).recoverWith { case _: ArithmeticException => Failure(SomeMathBusinessException(???)) } must beFailedTry.withThrowable[SomeMathBusinessException]
+      Try(1 / 0).recoverWith { case e: ArithmeticException => Failure(SomeBusinessException(e)) } must beFailedTry.withThrowable[SomeBusinessException]
     }
 
     "option 3 recover to change Failure to Success" in {
@@ -56,7 +56,7 @@ class TryExamplesTest extends SpecWithJUnit {
     }
 
     "option 4 recoverWith to change Failure to another Failure" in {
-      Try(1 / 0).recover { case _: ArithmeticException => throw SomeMathBusinessException(???) } must beFailedTry.withThrowable[SomeMathBusinessException]
+      Try(1 / 0).recover { case e: ArithmeticException => throw SomeBusinessException(e) } must beFailedTry.withThrowable[SomeBusinessException]
     }
 
   }
