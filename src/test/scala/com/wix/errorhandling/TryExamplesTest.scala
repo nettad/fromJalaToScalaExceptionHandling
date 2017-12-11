@@ -6,6 +6,7 @@ import org.specs2.mutable.SpecWithJUnit
 
 import scala.io.{BufferedSource, Source}
 import scala.util.{Failure, Success, Try}
+import GreaterThanEvaluator._
 
 class TryExamplesTest extends SpecWithJUnit {
   sequential
@@ -44,45 +45,45 @@ class TryExamplesTest extends SpecWithJUnit {
 
   "Example of how to recover from a Failed Try" >> {
     "option 1 recoverWith to change Failure to Success" in {
-      Try(1 / 0).recoverWith { case _: ArithmeticException => Success(-1) } must beSuccessfulTry
+      Try(howMuchGreater(is = "one", than = "1")) recoverWith { case _: NumberFormatException => Success(-1) } must beSuccessfulTry(-1)
     }
 
     "option 2 recoverWith to change Failure to another Failure" in {
-      Try(1 / 0).recoverWith { case e: ArithmeticException => Failure(SomeBusinessException(e)) } must beFailedTry.withThrowable[SomeBusinessException]
+      Try(howMuchGreater(is = "one", than = "1")) recoverWith { case e: NumberFormatException => Failure(SomeBusinessException(e)) } must beFailedTry.withThrowable[SomeBusinessException]
     }
 
     "option 3 recover to change Failure to Success" in {
-      Try(1 / 0).recover { case _: ArithmeticException => -1 } must beSuccessfulTry
+      Try(howMuchGreater(is = "one", than = "1")) recover { case _: NumberFormatException => -1 } must beSuccessfulTry(-1)
     }
 
     "option 4 recoverWith to change Failure to another Failure" in {
-      Try(1 / 0).recover { case e: ArithmeticException => throw SomeBusinessException(e) } must beFailedTry.withThrowable[SomeBusinessException]
+      Try(howMuchGreater(is = "one", than = "1")) recover { case e: NumberFormatException => throw SomeBusinessException(e) } must beFailedTry.withThrowable[SomeBusinessException]
     }
 
   }
 
   "Example Try in a for-loop comprehension" in {
     val result = for {
-      x <- Try(10/2)
-      y <- Try(6/3)
+      x <- Try(howMuchGreater(is = "10", than = "2"))
+      y <- Try(howMuchGreater(is = "6", than = "3"))
     } yield x + y
 
-    result must beSuccessfulTry(7)
+    result must beSuccessfulTry(11)
 
   }
 
   "Example matching on a Try" >> {
     "matching SuccessfulTry" in {
-      val result = Try(10/2) match {
+      val result = Try(howMuchGreater(is = "10", than = "2")) match {
         case Success(x) => x
         case Failure(_) => -1
       }
 
-      result must be_===(5)
+      result must be_===(8)
     }
 
     "matching Failure" in {
-      val result = Try(1/0) match {
+      val result = Try(howMuchGreater(is = "one", than = "1")) match {
         case Success(x) => x
         case Failure(_) => -1
       }
@@ -92,12 +93,12 @@ class TryExamplesTest extends SpecWithJUnit {
   }
 
   "Example Try using get" in {
-    Try(1/0).get must throwAn[ArithmeticException]
+    Try(howMuchGreater(is = "one", than = "1")).get must throwAn[NumberFormatException]
   }
 
   "Example Try using get or else for default value" in {
 
-    Try(1/0) getOrElse -1 must be_===(-1)
+    Try(howMuchGreater(is = "one", than = "1")) getOrElse -1 must be_===(-1)
   }
 
 
