@@ -9,6 +9,8 @@ clear enough please open an issue for me.
 The examples in this repo are trivial. So trivial in fact that you might find yourself asking, "Why would you write code like this?".
 Well the simple answer is, you mostly wouldn't. The point is just to show you how use the tools. 
 
+credit to this blog: http://pedrorijo.com/blog/scala-exceptions/
+
 If you like it please <b>star</b> or <b>share</b>.
 
 
