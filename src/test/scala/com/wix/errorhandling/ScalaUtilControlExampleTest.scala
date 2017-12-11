@@ -84,7 +84,16 @@ class ScalaUtilControlExampleTest extends SpecWithJUnit {
     recoveringFromAllNonFatalExceptions(1/"zero".toInt) must be_===(-2)
     recoveringFromAllNonFatalExceptions(throw new NullPointerException) must be_===(-3)
     recoveringFromAllNonFatalExceptions(throw MathError(new Exception())) must be_===(-4)
+  }
 
+  "Examples of Exception.allCatch - catching all exceptions with our without recover function" in {
+    Exception.allCatch(10/0) must throwAn[ArithmeticException]
+    
+    Exception.allCatch.withTry(10/0) must beFailedTry.withThrowable[ArithmeticException]
+
+    Exception.allCatch.opt(10/0) must beNone
+    Exception.allCatch.opt(-1) must beSome(-1)
+    
   }
 
 
