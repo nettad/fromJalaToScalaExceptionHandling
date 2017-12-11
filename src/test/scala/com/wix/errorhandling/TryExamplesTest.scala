@@ -2,13 +2,12 @@ package com.wix.errorhandling
 
 import java.io.File
 
-import com.wixpress.common.specs2.JMock
 import org.specs2.mutable.SpecWithJUnit
 
 import scala.io.{BufferedSource, Source}
 import scala.util.{Failure, Success, Try}
 
-class TryExamplesTest extends SpecWithJUnit with JMock {
+class TryExamplesTest extends SpecWithJUnit {
   sequential
 
   "Example of how to use the basic Try construct to read a file" in {
@@ -49,7 +48,7 @@ class TryExamplesTest extends SpecWithJUnit with JMock {
     }
 
     "option 2 recoverWith to change Failure to another Failure" in {
-      Try(1 / 0).recoverWith { case _: ArithmeticException => Failure(SomeMathBusinessException()) } must beFailedTry.withThrowable[SomeMathBusinessException]
+      Try(1 / 0).recoverWith { case _: ArithmeticException => Failure(SomeMathBusinessException(???)) } must beFailedTry.withThrowable[SomeMathBusinessException]
     }
 
     "option 3 recover to change Failure to Success" in {
@@ -57,7 +56,7 @@ class TryExamplesTest extends SpecWithJUnit with JMock {
     }
 
     "option 4 recoverWith to change Failure to another Failure" in {
-      Try(1 / 0).recover { case _: ArithmeticException => throw SomeMathBusinessException() } must beFailedTry.withThrowable[SomeMathBusinessException]
+      Try(1 / 0).recover { case _: ArithmeticException => throw SomeMathBusinessException(???) } must beFailedTry.withThrowable[SomeMathBusinessException]
     }
 
   }

@@ -25,7 +25,7 @@ class ScalaUtilControlExceptionMathCalculator() extends MathCalculator {
   }
 
   override def businessDivide(x: Int, by: Int): Int = {
-    val divideOrThrowBusinessException = nonFatalCatch withApply (_ => throw new SomeMathBusinessException)
+    val divideOrThrowBusinessException = nonFatalCatch withApply { e: Throwable => throw SomeMathBusinessException(e) }
     divideOrThrowBusinessException(x / by)
   }
 }

@@ -11,4 +11,4 @@ trait MathCalculator {
 
 case class MathError(e: Throwable) extends RuntimeException
 
-case class SomeMathBusinessException() extends RuntimeException
+case class SomeMathBusinessException(e: Throwable) extends RuntimeException

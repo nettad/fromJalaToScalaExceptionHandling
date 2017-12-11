@@ -33,6 +33,6 @@ class ScalaUtilTryMathCalculator extends MathCalculator {
   //Failures can be replaced by other failures altogether
   //this can be achieved via getOrElse(throw SomeMathBusinessException()) as well
   override def businessDivide(x: Int, by: Int): Int =
-    Try(x / by) orElse Failure(SomeMathBusinessException()) get
+    Try(x / by) orElse Failure(SomeMathBusinessException(???)) get
 
 }
