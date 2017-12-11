@@ -2,12 +2,13 @@ package com.wix.errorhandling
 
 import java.io.File
 
+import com.wixpress.common.specs2.JMock
 import org.specs2.mutable.SpecWithJUnit
 
 import scala.io.{BufferedSource, Source}
 import scala.util.{Failure, Success, Try}
 
-class TryExamplesTest extends SpecWithJUnit {
+class TryExamplesTest extends SpecWithJUnit with JMock {
   sequential
 
   "Example of how to use the basic Try construct to read a file" in {
@@ -44,7 +45,6 @@ class TryExamplesTest extends SpecWithJUnit {
 
   "Example of how to recover from a Failed Try" >> {
     "option 1 recoverWith to change Failure to Success" in {
-
       Try(1 / 0).recoverWith { case _: ArithmeticException => Success(-1) } must beSuccessfulTry
     }
 
@@ -53,7 +53,6 @@ class TryExamplesTest extends SpecWithJUnit {
     }
 
     "option 3 recover to change Failure to Success" in {
-
       Try(1 / 0).recover { case _: ArithmeticException => -1 } must beSuccessfulTry
     }
 
@@ -61,7 +60,45 @@ class TryExamplesTest extends SpecWithJUnit {
       Try(1 / 0).recover { case _: ArithmeticException => throw SomeMathBusinessException() } must beFailedTry.withThrowable[SomeMathBusinessException]
     }
 
+  }
 
+  "Example Try in a for-loop comprehension" in {
+    val result = for {
+      x <- Try(10/2)
+      y <- Try(6/3)
+    } yield x + y
+
+    result must beSuccessfulTry(7)
+
+  }
+
+  "Example matching on a Try" >> {
+    "matching SuccessfulTry" in {
+      val result = Try(10/2) match {
+        case Success(x) => x
+        case Failure(_) => -1
+      }
+
+      result must be_===(5)
+    }
+
+    "matching Failure" in {
+      val result = Try(1/0) match {
+        case Success(x) => x
+        case Failure(_) => -1
+      }
+
+      result must be_===(-1)
+    }
+  }
+
+  "Example Try using get" in {
+    Try(1/0).get must throwAn[ArithmeticException]
+  }
+
+  "Example Try using get or else for default value" in {
+
+    Try(1/0) getOrElse -1 must be_===(-1)
   }
 
 
