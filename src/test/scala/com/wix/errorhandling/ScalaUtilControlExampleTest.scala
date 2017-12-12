@@ -2,6 +2,7 @@ package com.wix.errorhandling
 
 import java.io.File
 
+import com.wix.errorhandling.GreaterThanEvaluator.howMuchGreater
 import org.specs2.mutable.SpecWithJUnit
 
 import scala.io.{BufferedSource, Source}
@@ -9,6 +10,7 @@ import scala.util.control.Exception
 import scala.util.control.Exception.{Catch, catching, handling, nonFatalCatch, ultimately}
 
 class ScalaUtilControlExampleTest extends SpecWithJUnit {
+  sequential
 
   "Example of how to use basic handle/by/ultimately construct to read a file" in {
     def read(file: String): String =
@@ -40,59 +42,58 @@ class ScalaUtilControlExampleTest extends SpecWithJUnit {
   }
 
   "Example of Exception.failAsValue" in {
-    val divideOrReturnError = Exception.failAsValue(classOf[ArithmeticException])("ERROR")
+    val divideOrReturnError = Exception.failAsValue(classOf[NumberFormatException])("ERROR")
 
-    divideOrReturnError(10 / 2) must be_===(5)
+    divideOrReturnError(howMuchGreater(isX = "10", thanY = "5")) must be_===(5)
 
-    divideOrReturnError(10 / 0) must be_===("ERROR")
+    divideOrReturnError(howMuchGreater(isX = "one", thanY = "1")) must be_===("ERROR")
   }
 
   "Example of Exception.catching and chaining of Exception.catching" in {
     def handleFormatErrorBySkipOrThrow(x: String) = catching(classOf[NumberFormatException]).
       withApply { e: Throwable => if (x == "skip") -1 else throw MathError(e) }
 
-    val handleArithmeticError = catching(classOf[ArithmeticException]) withApply { e: Throwable => throw MathError(e) }
+    val handleXIsLessThanYException = catching(classOf[XIsLessThanYException]) withApply { e: Throwable => throw MathError(e) }
 
-    (handleFormatErrorBySkipOrThrow("10") or handleArithmeticError)(10/2) must be_===(5)
+    (handleFormatErrorBySkipOrThrow("10") or handleXIsLessThanYException)(howMuchGreater(isX = "10", thanY = "5")) must be_===(5)
 
-    (handleFormatErrorBySkipOrThrow("skip") or handleArithmeticError)("skip".toInt/2) must be_===(-1)
+    (handleFormatErrorBySkipOrThrow("skip") or handleXIsLessThanYException)(howMuchGreater(isX = "skip", thanY = "1")) must be_===(-1)
 
-    (handleFormatErrorBySkipOrThrow("10") or handleArithmeticError)(10/0) must throwA[MathError]
-
-    
+    (handleFormatErrorBySkipOrThrow("10") or handleXIsLessThanYException)(howMuchGreater(isX = "1", thanY = "10")) must throwA[MathError]
   }
 
   "Example of Exception.nonFatalCatch recovering with some other Exception" in {
     //catches all non fatal exceptions
     val divideOrThrowBusinessException = nonFatalCatch withApply { e: Throwable => throw SomeBusinessException(e) }
 
-    divideOrThrowBusinessException(10 / 2) must be_===(5)
+    divideOrThrowBusinessException(howMuchGreater(isX = "10", thanY = "5")) must be_===(5)
 
-    divideOrThrowBusinessException(10/0) must throwA[SomeBusinessException]
+    divideOrThrowBusinessException(howMuchGreater(isX = "one", thanY = "1")) must throwA[SomeBusinessException]
   }
 
+
   "Example of Exception.nonFatalCatch in a chaining pattern" in {
-    val recoverFromArithmeticException = Exception.failAsValue(classOf[ArithmeticException])(-1)
+    val recoverFromXIsLessThanYException = Exception.failAsValue(classOf[XIsLessThanYException])(-1)
     val recoverFromNumberFormatException = Exception.failAsValue(classOf[NumberFormatException])(-2)
     val recoverFromNullPointerException = Exception.failAsValue(classOf[NullPointerException])(-3)
     val recoverFromAllOtherNonFatalExceptions = nonFatalCatch withApply { _ => -4 }
 
     val recoveringFromAllNonFatalExceptions =
-      recoverFromArithmeticException or recoverFromNumberFormatException or recoverFromNullPointerException or recoverFromAllOtherNonFatalExceptions
+      recoverFromXIsLessThanYException or recoverFromNumberFormatException or recoverFromNullPointerException or recoverFromAllOtherNonFatalExceptions
 
-    recoveringFromAllNonFatalExceptions(1/0) must be_===(-1)
-    recoveringFromAllNonFatalExceptions(1/"zero".toInt) must be_===(-2)
+    recoveringFromAllNonFatalExceptions(howMuchGreater(isX = "1", thanY = "10")) must be_===(-1)
+    recoveringFromAllNonFatalExceptions(howMuchGreater(isX = "one", thanY = "1")) must be_===(-2)
     recoveringFromAllNonFatalExceptions(throw new NullPointerException) must be_===(-3)
     recoveringFromAllNonFatalExceptions(throw MathError(new Exception())) must be_===(-4)
   }
 
   "Examples of Exception.allCatch - catching all exceptions with our without recover function" in {
-    Exception.allCatch(10/0) must throwAn[ArithmeticException]
+    Exception.allCatch(howMuchGreater(isX = "one", thanY = "1")) must throwAn[NumberFormatException]
     
-    Exception.allCatch.withTry(10/0) must beFailedTry.withThrowable[ArithmeticException]
+    Exception.allCatch.withTry(howMuchGreater(isX = "one", thanY = "1")) must beFailedTry.withThrowable[NumberFormatException]
 
-    Exception.allCatch.opt(10/0) must beNone
-    Exception.allCatch.opt(-1) must beSome(-1)
+    Exception.allCatch.opt(howMuchGreater(isX = "one", thanY = "1")) must beNone
+    Exception.allCatch.opt(howMuchGreater(isX = "10", thanY = "1")) must beSome(9)
     
   }
 

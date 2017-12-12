@@ -2,6 +2,14 @@ package com.wix.errorhandling
 
 object GreaterThanEvaluator {
 
-  def howMuchGreater(is: String, than: String) = is.toInt - than.toInt
+  def howMuchGreater(isX: String, thanY: String) = {
+    val x = isX.toInt
+    val y = thanY.toInt
+    
+    if (x < y) throw XIsLessThanYException()
+    x - y
+  }
 
 }
+
+case class XIsLessThanYException() extends RuntimeException
