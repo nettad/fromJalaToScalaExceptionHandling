@@ -94,7 +94,19 @@ class ScalaUtilControlExampleTest extends SpecWithJUnit {
 
     Exception.allCatch.opt(howMuchGreater(isX = "one", thanY = "1")) must beNone
     Exception.allCatch.opt(howMuchGreater(isX = "10", thanY = "1")) must beSome(9)
-    
+  }
+
+  "'By' can bite you in the .... if you aren't careful" in {
+    def alwaysFails() =
+      handling(classOf[Exception]).by(throw SomeBusinessException(new Exception)) {
+        howMuchGreater(isX = "10", thanY = "5")
+      }
+
+    alwaysFails() must throwA[SomeBusinessException]
+
+    //This fails cause accidentally forgot to define by as a function.
+    //i.e. by(e => throw SomeBusinessException(e))
+
   }
 
 
