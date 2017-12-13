@@ -41,6 +41,14 @@ class ScalaUtilControlExampleTest extends SpecWithJUnit {
 
   }
 
+  "Example of ultimately without handling" in {
+    def showThatUltimatelyRunsAfterTheBodyEvenWithoutHandlingBy() = ultimately[Unit](throw new IllegalArgumentException()) {
+      throw new UnsupportedOperationException()
+    }
+
+    showThatUltimatelyRunsAfterTheBodyEvenWithoutHandlingBy() must throwAn[IllegalArgumentException]
+  }
+
   "Example of Exception.failAsValue" in {
     val divideOrReturnError = Exception.failAsValue(classOf[NumberFormatException])("ERROR")
 
